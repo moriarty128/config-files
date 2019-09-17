@@ -5,7 +5,6 @@
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
-archey3 -c cyan
 shopt -s checkwinsize
 
 # colors
@@ -29,3 +28,6 @@ alias shred="shred -zf"
 #alias python="python2"
 alias wget="wget -U 'noleak'"
 alias curl="curl --user-agent 'noleak'"
+alias BRIGHTNESS="xbacklight -get"
+
+archey3 -c cyan
