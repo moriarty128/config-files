@@ -16,6 +16,7 @@ general {
 }
 
 order += "group network"
+order += "net_rate"
 order += "volume_status"
 order += "backlight"
 order += "battery all"
