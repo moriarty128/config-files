@@ -5,8 +5,6 @@
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
-shopt -s checkwinsize
-
 # colors
 darkgrey="$(tput bold ; tput setaf 0)"
 white="$(tput bold ; tput setaf 7)"
@@ -17,9 +15,12 @@ nc="$(tput sgr0)"
 # exports
 export PATH="${HOME}/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:"
 export PATH="${PATH}/usr/local/sbin:/opt/bin:/usr/bin/core_perl:/usr/games/bin:"
-export PS1="\[$blue\][\[$cyan\]\u\[$white\]@\[$cyan\]\H \[$darkgrey\]\w\[$darkgrey\]\[$blue\]]\\[$darkgrey\] #\[$nc\] "
+export PS1=$darkgrey\ \\w\ $white\$\ $nc
+#export PS1=$blue[$cyan\\u$white\@$cyan\\H\ $darkgrey\\w$blue]$darkgrey\ \$\ $nc
 export LD_PRELOAD=""
-export EDITOR="nano"
+export HISTSIZE=300
+export HISTFILESIZE=300000
+export EDITOR="vim"
 
 # alias
 alias ls="ls --color"
@@ -29,5 +30,7 @@ alias shred="shred -zf"
 alias wget="wget -U 'noleak'"
 alias curl="curl --user-agent 'noleak'"
 alias BRIGHTNESS="xbacklight -get"
+alias clns="clear && source ~/.bashrc"
+alias cdpro="cd ~/Documents/Programming"
 
 archey3 -c cyan

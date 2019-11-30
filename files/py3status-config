@@ -11,45 +11,44 @@ general {
     color_good = "#6298e0"
     color_bad = "#ff3434"
     color_degraded = "#faffff"
-    output_format = i3bar
- 
+    output_format = i3bar 
 }
 
 order += "group network"
 order += "net_rate"
 order += "volume_status"
 order += "backlight"
+order += "battery_level"
 order += "battery all"
-order += "arch_updates"
-order += "tztime local"
-
+order += "group conky"
+order += "group time"
 
 group network {
     cycle=0    
     format = "{output}"
     wireless _first_ {
-        format_up = "W: (%quality at %essid)"
+        format_up = "W: %essid"
         format_down = "W: DOWN"
     }
 
     ethernet _first_ {
         # if you use %speed, i3status requires root privileges
-        format_up = "E: %ip (%speed)"
+        format_up = "E: %ip"
         format_down = "E: DOWN"
     }
 }
 
 net_rate{
-        format = "{down}{up}"
+        format = "[\?color=good {down}{up}]"
 }
 
-battery all {
-    format = "%status%percentage(%remaining %consumption)"
+battery_level{
+    format = "{percent}% ({time_remaining})"
     format_down = "No battery"
-    status_chr = "CHR: "
-    status_bat = "BAT: "
-    status_unk = "UNK"
-    status_full = "FULL: "
+    #status_chr = "CHR: "
+    #status_bat = "BAT: "
+    #status_unk = "UNK"
+    #status_full = "FULL: "
     path = "/sys/class/power_supply/BAT%d/uevent"
     low_threshold = 20
     last_full_capacity = true
@@ -57,9 +56,23 @@ battery all {
 
 }
 
-tztime local {
-    format = "%H:%M:%S %Y-%m-%d"
+battery all{
+	format = "%consumption"
 }
+group time{
+cycle=0
+
+clock {
+   format = "{Local}"
+   format_time = "%H:%M:%S"
+}
+
+tztime local {
+    format = "%d-%m-%Y"
+}
+
+}
+
 
 volume_status {
     format = '{percentage}%'
@@ -70,7 +83,33 @@ volume_status {
 }
 
 backlight {
-    format ='{level}%'
+    format ='[\?color=yellow {level}%]'
 	brightness_delta = 5
 	low_tune_threshold = 10
 }
+
+
+group conky{
+	conky memory {
+    		format = '[\?color=lightskyblue {mem}/{memmax}] '
+    		thresholds = [
+        		(0, 'darkgray'), (0.001, 'good'), (50, 'degraded'),
+        		(75, 'orange'), (85, 'bad')
+    		]
+	}
+	conky cpu {
+    format = 'CPU '
+    format += '[\?color=cpu.cpu0 {cpu cpu0}% ] '
+    format += '[\?color=cpu.cpu1 {cpu cpu1}% ] '
+    format += '[\?color=cpu.cpu2 {cpu cpu2}% ] '
+    format += '[\?color=cpu.cpu3 {cpu cpu3}% ]'
+
+    thresholds = [
+        (0, 'darkgray'), (0.001, 'good'), (50, 'degraded'),
+        (75, 'orange'), (85, 'bad')
+    ]
+}
+	
+}
+
+
