@@ -1,0 +1,3 @@
+let "a = ($1%101)*255/100"
+echo $a > /sys/class/backlight/amdgpu_bl0/brightness
+
