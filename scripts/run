@@ -1,0 +1,63 @@
+#!/usr/bin/env python3
+from os import system 
+import argparse
+
+interpreted=["py"]
+compiled=["c","cpp"]
+
+def argsparser():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("filename",help="filename")
+    parser.add_argument("-e","--ext",help="to specify the extension, if not already in file name")
+    parser.add_argument("-c","--compiler",help="to specify the compiler command")
+    parser.add_argument("-v","--verbosity",help="increases verbosity",action="store_true")
+    return parser.parse_args()
+
+def command_creator(args):
+    global command
+    global file
+    global ext
+
+    file=args.filename
+    if args.ext:
+        ext=args.ext
+    else:
+        ext=file.split(".")[-1]
+    
+    if ext=="c":
+        command="gcc "
+    elif ext=="cpp":
+        command="gout "
+    elif ext=="py":
+        command="python "
+    if args.compiler:
+        command=args.compiler+" "
+
+    command+=file 
+
+def run(args):
+    global command
+    if ext in interpreted:
+        if args.verbosity:
+            print("running "+command+"\n")
+        system(command)
+
+    if ext in compiled:
+        if args.verbosity:
+            print("running "+command+"\n")
+        system(command)
+        command="./a.out"
+        if args.verbosity:
+            print("running "+command+"\n")
+        system(command)
+        if args.verbosity:
+            print("removing "+command+"\n")
+        system("rm "+command)
+
+def main():
+    args=argsparser()
+    command_creator(args)
+    run(args)
+
+if __name__=="__main__":
+    main()
