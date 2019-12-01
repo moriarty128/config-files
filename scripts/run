@@ -2,61 +2,65 @@
 from os import system 
 import argparse
 
-interpreted=["py"]
 compiled=["c","cpp"]
 
 def argsparser():
     parser = argparse.ArgumentParser()
-    parser.add_argument("filename",help="filename")
+    parser.add_argument("filenames",help="Name(s) of the file/Multiple files",nargs="+")
     parser.add_argument("-e","--ext",help="to specify the extension, if not already in file name")
     parser.add_argument("-c","--compiler",help="to specify the compiler command")
-    parser.add_argument("-v","--verbosity",help="increases verbosity",action="store_true")
+    parser.add_argument("-v","--verbosity",help="increases verbosity",action="count",default=0)
     return parser.parse_args()
 
 def command_creator(args):
-    global command
-    global file
-    global ext
+    global files
+    files=[]
 
-    file=args.filename
-    if args.ext:
-        ext=args.ext
-    else:
-        ext=file.split(".")[-1]
-    
-    if ext=="c":
-        command="gcc "
-    elif ext=="cpp":
-        command="gout "
-    elif ext=="py":
-        command="python "
-    if args.compiler:
-        command=args.compiler+" "
-
-    command+=file 
+    for file in args.filenames:
+        if args.ext:
+            ext=args.ext
+        else:
+            ext=file.split(".")[-1]
+        
+        if args.compiler:
+            command=args.compiler+" "
+        elif ext=="c":
+            command="gcc "
+        elif ext=="cpp":
+            command="g++ "
+        elif ext=="py":
+            command="ipython "
+        else:
+            print("filetype not supported")
+        command+=file 
+        files.append({"ext":ext,"command":command,"name":file})
 
 def run(args):
-    global command
-    if ext in interpreted:
-        if args.verbosity:
-            print("running "+command+"\n")
-        system(command)
-
-    if ext in compiled:
-        if args.verbosity:
-            print("running "+command+"\n")
-        system(command)
-        command="./a.out"
-        if args.verbosity:
-            print("running "+command+"\n")
-        system(command)
-        if args.verbosity:
-            print("removing "+command+"\n")
-        system("rm "+command)
+    global files
+    for file in files:
+        command=file["command"]
+        if file["ext"] in compiled:
+            if args.verbosity>0 or len(files)>1:
+                print("running "+command+"\n")
+            system(file["command"])
+            command="./a.out"
+            if args.verbosity>1:
+                print("running "+command+"\n")
+            system(command)
+            if args.verbosity>1:
+                print("\nremoving "+command+"\n")
+            system("rm "+command)
+        else:
+            if args.verbosity>0 or len(files)>1:
+                print("running "+command+"\n")
+            system(command)
+        print("\n")
 
 def main():
     args=argsparser()
     command_creator(args)
+    if args.verbosity>1:
+        print(args)
     run(args)
 
 if __name__=="__main__":
