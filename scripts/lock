@@ -1,0 +1,7 @@
+#!/usr/bin/bash
+
+brt="$(~/bin/bkl)"
+
+~/bin/bkl 0
+i3lock -n -i /home/flash/Pictures/archlinux.png -u -b
+~/bin/bkl $brt
