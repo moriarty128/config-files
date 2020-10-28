@@ -10,8 +10,8 @@ HOME = Path.home()
 ETC = Path('/etc/')
 CURRENT_DIR = getcwd()
 GIT_REPO = HOME/'Programming/dotfiles-and-scripts/'
-BOLD = '\033[1m'
-ENDB = '\033[0m'
+BOLD = '\033[1m' # ascii code for bold text
+ENDB = '\033[0m' # ascii code for clearing changes
 
 
 def main():
@@ -22,10 +22,10 @@ def main():
                 ETC: ['pacman.conf'],
                 ETC/'pacman.d/': ['mirrorlist']
     }
-
+    #get the list of changes in dotfile and copy_scripts
     changes = copy_dotfiles(dotfiles,copy=False)+copy_scripts(scripts,copy=False)
     n_changes = len(changes)
-    
+    #change dir to git repo and push any changes
     chdir(GIT_REPO)
     if changes:
         print(BOLD+f"{n_changes} file(s) modified:"+ENDB)
@@ -37,22 +37,20 @@ def main():
             push_repo(n_changes)
     else:
         print("No Changes.")
-    chdir(CURRENT_DIR)
 
 def copy_dotfiles(dotfiles,copy=True):
     dotfiles_folder = GIT_REPO/'files'
     changes = []
-    
     for directory, files in dotfiles.items():
         for file in files:
+            #if name of the dotfile is config, change it to dirname+config
             if file == "config":
                 filenew = path.basename(directory)+file
             else:
                 filenew = path.basename(file)
-            
             ogfile = directory/file
             repofile = dotfiles_folder/filenew
-           
+            # copy only if file doesn't exist in repo or if there are changes
             if not path.exists(repofile) or not filecmp.cmp(ogfile, repofile):
                 #print(f"{ogfile}, {repofile}")
                 if copy:
@@ -64,12 +62,11 @@ def copy_dotfiles(dotfiles,copy=True):
 def copy_scripts(scripts,copy=True):
     scripts_folder = GIT_REPO/'scripts'
     changes = []
-   
     for directory, files in scripts.items():
         for file in files:
             ogfile = directory/file
             repofile = scripts_folder/path.basename(file)
-            
+            # copy only if file doesn't exist in repo or if there are changes
             if not path.exists(repofile) or not filecmp.cmp(ogfile, repofile):
                 #print(f"{ogfile}, {repofile}")
                 if copy:
@@ -79,17 +76,19 @@ def copy_scripts(scripts,copy=True):
 
 
 def push_repo(n_changes):
+    # stage changes
     print(BOLD+f"\n- git add ./*"+ENDB)
     system(f"git add ./*")
-          
+    # print git status
     print(BOLD+"\n- git status"+ENDB)
     system("git status")
-    
+    # commit changes
     dt = datetime.datetime.now().strftime("%d-%m-%Y %H:%M")
     print(BOLD+f"\n- git commit -m '{f'updated {n_changes} files on ' + dt}'"+ENDB)
     system(f"git commit -m '{f'updated {n_changes} files on ' + dt}'")
-    
-    print(BOLD+f"\n- git push"+ENDB)
+    #push changes
+    print(BOLD+f"\n- git pull && git push"+ENDB)
+    system(f"git pull >/dev/null 2>&1")
     system(f"git push")
 
 
