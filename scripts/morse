@@ -30,8 +30,8 @@ inputstring="Say Hi if you decode this"
 unit_time=0.05
 
 #change the letter a to 0 for transmitting through power button
-ledon =b"\x8a"
-ledoff=b"\x0a"
+ledon =b"\x80"
+ledoff=b"\x00"
 
 def encryptor(a):
     b=''

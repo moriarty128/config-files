@@ -1,7 +1,14 @@
 #!/usr/bin/bash
+#for i3config
+if [[ $brt -ne "-1" ]] || [ -z ${brt+x} ]; then
+	brt=$(xbacklight -get)
+	echo $brt
+fi
 
-brt="$(~/bin/bkl)"
+: ${1?"Pass a lock command. Thank you!"}
 
-~/bin/bkl 0
-i3lock -n -i /home/flash/Pictures/archlinux.png -u -b
-~/bin/bkl $brt
+xbacklight -set 0
+$1
+xbacklight -set $brt
+
+brt=-1

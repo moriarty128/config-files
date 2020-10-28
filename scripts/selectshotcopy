@@ -1,0 +1,2 @@
+scrot /tmp/$(date +"%Y-%m-%d-%H-%M-%S").png -a $(slop -f '%x,%y,%w,%h') -e 'xclip -selection c -t image/png < $f'
+#for i3 config

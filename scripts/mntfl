@@ -1,21 +1,8 @@
-folder=${2:-"Files"}
-filesys=${1:-"/dev/nvme0n1p5"}
-if [ ! -d "/run/media/flash/$folder/" ]; then  
-    if [ ! -d "/run/media/flash" ]; then
-        mkdir /run/media/flash
-        echo "created flash directory"
-    fi
-    mkdir /run/media/flash/$folder  
-    echo created $folder
-  else
-    if df | grep -q /run/media/flash/Files; then
-      umount /run/media/flash/$folder
-      echo umounted $folder
-    else
-      echo "mountpoint exists already!"
-    fi
-fi
+#!/usr/bin/bash
+#for mounting hdd in term
 
-
+folder=${2:-"Media"}
+filesys=${1:-"/dev/sda1"}
+mkdir /run/media/flash
+mkdir /run/media/flash/$folder  
 mount $filesys /run/media/flash/$folder
-echo mounted $filesys on /run/media/flash/$folder  

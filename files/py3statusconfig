@@ -5,7 +5,6 @@
 # The following line should contain a sharp s:
 # ß
 # If the above line is not correctly displayed, fix your editor first!
-
 general {
     colors = true
     color_good = "#6298e0"
@@ -21,7 +20,7 @@ order += "backlight"
 order += "battery_level"
 order += "battery all"
 order += "group conky"
-order += "group time"
+order += "clock"
 
 group network {
     cycle=0    
@@ -59,20 +58,11 @@ battery_level{
 battery all{
 	format = "%consumption"
 }
-group time{
-cycle=0
 
 clock {
    format = "{Local}"
-   format_time = "%H:%M:%S"
+   format_time = "%H:%M:%S %d-%m %a"
 }
-
-tztime local {
-    format = "%d-%m-%Y"
-}
-
-}
-
 
 volume_status {
     format = '{percentage}%'
@@ -90,26 +80,44 @@ backlight {
 
 
 group conky{
+    cycle=1.5
+    fixed_width=True
+    align='left'
 	conky memory {
-    		format = '[\?color=lightskyblue {mem}/{memmax}] '
-    		thresholds = [
-        		(0, 'darkgray'), (0.001, 'good'), (50, 'degraded'),
-        		(75, 'orange'), (85, 'bad')
-    		]
+    	format = "RAM "
+	format += '[\?color=lightskyblue {mem}/{memmax}] '
+		thresholds = [
+       		(0, 'darkgray'), (0.001, 'good'), (50, 'degraded'),
+       		(75, 'orange'), (85, 'bad')
+   		]
 	}
 	conky cpu {
-    format = 'CPU '
-    format += '[\?color=cpu.cpu0 {cpu cpu0}% ] '
-    format += '[\?color=cpu.cpu1 {cpu cpu1}% ] '
-    format += '[\?color=cpu.cpu2 {cpu cpu2}% ] '
-    format += '[\?color=cpu.cpu3 {cpu cpu3}% ]'
+        format = 'CPU '
+        format += '[\?color=cpu.cpu0 {cpu cpu0}% ] '
+        format += '[\?color=cpu.cpu1 {cpu cpu1}% ] '
+        format += '[\?color=cpu.cpu2 {cpu cpu2}% ] '
+        format += '[\?color=cpu.cpu3 {cpu cpu3}% ]'
 
-    thresholds = [
-        (0, 'darkgray'), (0.001, 'good'), (50, 'degraded'),
-        (75, 'orange'), (85, 'bad')
-    ]
+        thresholds = [
+            (0, 'darkgray'), (0.001, 'good'), (50, 'degraded'),
+            (75, 'orange'), (85, 'bad')
+        ]
+    }
+
+    lm_sensors {
+    	chips = ["thinkpad-isa-0000","k10temp-pci-00c3"]
+    	sensors = ["temp1","fan1"]
+       	format_chip = '{format_sensor}' 
+    	format_sensor = '[\?if=name=temp1 CPU ]'
+        format_sensor += '[\?color=input \?if=name=temp1 {input}°C]'
+    	format_sensor += '[\?if=name=fan1 FAN ]'
+        format_sensor += '[\?if=name=fan1 {input}]'
+    	thresholds = [
+    		(0, "#5f00ff"),
+    		(20, "#00afff"),
+    		(40, "#d75f00"),
+    		(60, "#ff5f00"),
+    		(85, "#ff0000"),
+       	]
+    }
 }
-	
-}
-
-

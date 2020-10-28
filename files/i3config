@@ -43,8 +43,8 @@ bindsym $modkey+Return exec --no-startup-id terminator
 bindsym $modkey+Shift+q kill
 
 # start dmenu (a program launcher)
-bindsym $modkey+d exec --no-startup-id rofi -show run
-# bindsym $modkey+d exec --no-startup-id dmenu_run
+bindsym $modkey+d exec --no-startup-id rofi -show run -no-show-match
+#bindsym $modkey+d exec --no-startup-id dmenu_run
 
 # There also is the (new) i3-dmenu-desktop which only displays applications
 # shipping a .desktop file. It is a wrapper around dmenu, so you need that
@@ -152,11 +152,11 @@ bindsym $modkey+minus scratchpad show
 #set $xcolor15 #c5c8c6
 # blue theme
 set $xforeground #c5c8c6
-set $xbackground #1d1f21
+set $xbackground #212320
 set $xcursor #c5c8c6
 set $xcolor0 #0d3264
 set $xcolor8 #373b41
-set $xcolor1 #467ecb
+set $xcolor1 #1693cf
 set $xcolor9 #cc6666
 set $xcolor2 #8c9440
 set $xcolor10 #b5bd68
@@ -173,7 +173,7 @@ set $xcolor15 #c5c8c6
 
 # Colors
 # Class                 border          backgr      text            indic
-client.focused          $xcolor6       $xcolor1     $xbackground   $xcolor7
+client.focused          $xcolor6       $xcolor1     $xbackground  
 client.focused_inactive $xcolor6       $xcolor0     $xcolor14
 client.unfocused        $xcolor6       $xcolor0     $xcolor14
 client.urgent           $xbackground   $xcolor9     $xbackground
@@ -264,9 +264,9 @@ bindsym $modkey+r mode "resize"
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
 bar {
-    status_command py3status -c ~/.config/i3status/config
+    status_command py3status -c ~/.config/py3status/config
     mode dock
-    font pango:DejaVu Sans Mono, Awesome 10
+    font pango: Source Code Pro, Awesome 10.5
     separator_symbol "|"
 
     colors {
@@ -276,7 +276,7 @@ bar {
 
         #Where              #Border         #Background     #Text
         focused_workspace   $xbackground    $xcolor1        $xbackground
-        #urgent_workspace    $xbackground    $xcolor9        $xbackground
+        urgent_workspace    $xbackground    $xcolor9        $xbackground
         urgent_workspace    $xbackground    $xcolor1        $xbackground
         inactive_workspace  $xbackground    $xcolor0        $xforeground
     }
@@ -360,15 +360,15 @@ mode "$mode_gaps_outer" {
 }
 
 #wallpaper
-exec feh --bg-scale /home/flash/Pictures/o9*
+exec feh --bg-scale /home/flash/Pictures/Wallpapers/arch_simple2.png
 #nm-applet
 exec nm-applet
 
 #lock
-bindsym Mod4+Mod1+l exec i3lock -i /home/flash/Pictures/1.png -u -b
+bindsym Mod4+Mod1+l exec $(~/.bin/lock "i3lock -n -i /home/flash/Pictures/Wallpapers/arch_simple1080.png -u")
 
 # Touchpad stuff
-exec xinput set-prop "SynPS/2 Synaptics TouchPad" "libinput Accel Speed" 0.2 #increase speed
+exec xinput set-prop "SynPS/2 Synaptics TouchPad" "libinput Accel Speed" 0.1 #increase speed
 exec xinput set-prop "SynPS/2 Synaptics TouchPad" "libinput Tapping Enabled" 1 #tap to click
 
 # Audio stuff
@@ -382,11 +382,22 @@ bindsym XF86MonBrightnessUp exec xbacklight -inc 5 #increase screen brightness
 bindsym XF86MonBrightnessDown exec xbacklight -dec 5 #decrease screen brightness
 
 #startup
-exec terminator
+exec terminator 
 
 #screenshots
-bindsym --release Print exec gnome-screenshot #full screen
-bindsym --release Mod4+Print exec gnome-screenshot -a #select area
+#full screen
+bindsym --release Print exec scrot /home/flash/Pictures/Screenshots/'Screenshot from '$(date +"%Y-%m-%d")' '$(date +"%H-%M-%S")'.png' 
+#select screen
+bindsym --release Mod4+Print exec /home/flash/.bin/selectshot 
+#copy screen
+bindsym --release Shift+Print exec scrot /tmp/$(date +"%Y-%m-%d-%H-%M-%S").png -e 'xclip -selection c -t image/png < $f'
+#copy select
+bindsym --release Mod4+Shift+Print exec /home/flash/.bin/selectshotcopy 
+
 
 #xss-lock
-exec xss-lock -- i3lock -n -i /home/flash/Pictures/1.png &
+exec xss-lock -- $(~/.bin/lock "i3lock -n -i /home/flash/Pictures/Wallpapers/arch_simple1080.png -u -b &")
+
+#picom
+exec --no-startup-id picom
+

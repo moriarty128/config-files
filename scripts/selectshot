@@ -1,0 +1,2 @@
+scrot /home/flash/Pictures/Screenshots/'Screenshot from '$(date +"%Y-%m-%d")' '$(date +"%H-%M-%S")'.png' -a $(slop -f '%x,%y,%w,%h')
+#for i3 config

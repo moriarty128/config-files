@@ -1,7 +1,0 @@
-a=${1:-"-1"}
-if [ "$a" != "-1" ]; then
-	let "brt = (a%101)*255/100"
-	echo $brt > /sys/class/backlight/amdgpu_bl0/brightness
-else 
-	xbacklight -get
-fi

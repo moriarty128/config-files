@@ -1,0 +1,97 @@
+#!/usr/bin/env python3
+from pathlib import Path
+from os import path, system, getcwd, chdir
+from glob import glob
+from shutil import copy2
+import datetime
+import filecmp
+
+HOME = Path.home()
+ETC = Path('/etc/')
+CURRENT_DIR = getcwd()
+GIT_REPO = HOME/'Programming/dotfiles-and-scripts/'
+BOLD = '\033[1m'
+ENDB = '\033[0m'
+
+
+def main():
+    scripts = {HOME/'.bin': glob(str(HOME/'.bin/*'))}
+    dotfiles = {HOME: ['.bashrc'],
+                HOME/'.config/i3': ['config'],
+                HOME/'.config/py3status': ['config'],
+                ETC: ['pacman.conf'],
+                ETC/'pacman.d/': ['mirrorlist']
+    }
+
+    changes = copy_dotfiles(dotfiles,copy=False)+copy_scripts(scripts,copy=False)
+    n_changes = len(changes)
+    
+    chdir(GIT_REPO)
+    if changes:
+        print(BOLD+f"{n_changes} file(s) modified:"+ENDB)
+        for file in changes:
+            print(file)
+        if input(BOLD+"\nPush to repo?(y/n): "+ENDB).lower() in ["y","","yes"]:
+            copy_dotfiles(dotfiles)
+            copy_scripts(scripts)
+            push_repo(n_changes)
+    else:
+        print("No Changes.")
+    chdir(CURRENT_DIR)
+
+def copy_dotfiles(dotfiles,copy=True):
+    dotfiles_folder = GIT_REPO/'files'
+    changes = []
+    
+    for directory, files in dotfiles.items():
+        for file in files:
+            if file == "config":
+                filenew = path.basename(directory)+file
+            else:
+                filenew = path.basename(file)
+            
+            ogfile = directory/file
+            repofile = dotfiles_folder/filenew
+           
+            if not path.exists(repofile) or not filecmp.cmp(ogfile, repofile):
+                #print(f"{ogfile}, {repofile}")
+                if copy:
+                    copy2(ogfile, repofile)
+                changes.append(str(ogfile))
+    return changes
+
+
+def copy_scripts(scripts,copy=True):
+    scripts_folder = GIT_REPO/'scripts'
+    changes = []
+   
+    for directory, files in scripts.items():
+        for file in files:
+            ogfile = directory/file
+            repofile = scripts_folder/path.basename(file)
+            
+            if not path.exists(repofile) or not filecmp.cmp(ogfile, repofile):
+                #print(f"{ogfile}, {repofile}")
+                if copy:
+                    copy2(ogfile, repofile)
+                changes.append(str(ogfile))
+    return changes
+
+
+def push_repo(n_changes):
+    print(BOLD+f"\n- git add ./*"+ENDB)
+    system(f"git add ./*")
+          
+    print(BOLD+"\n- git status"+ENDB)
+    system("git status")
+    
+    dt = datetime.datetime.now().strftime("%d-%m-%Y %H:%M")
+    print(BOLD+f"\n- git commit -m '{f'updated {n_changes} files on ' + dt}'"+ENDB)
+    system(f"git commit -m '{f'updated {n_changes} files on ' + dt}'")
+    
+    print(BOLD+f"\n- git push"+ENDB)
+    system(f"git push")
+
+
+if __name__ == "__main__":
+    main()
