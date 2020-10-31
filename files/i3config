@@ -396,7 +396,7 @@ bindsym --release Mod4+Shift+Print exec /home/flash/.bin/selectshotcopy
 
 
 #xss-lock
-exec xss-lock -- $(~/.bin/lock "i3lock -n -i /home/flash/Pictures/Wallpapers/arch_simple1080.png -u -b &")
+exec xss-lock -- ~/.bin/lock "i3lock -n -i /home/flash/Pictures/Wallpapers/arch_simple1080.png -u -b &" &
 
 #picom
 exec --no-startup-id picom

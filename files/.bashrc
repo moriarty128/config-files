@@ -39,6 +39,9 @@ alias r="R"
 alias mpv="mpv --vo=gpu --hwdec=vaapi"
 alias open="xdg-open"
 alias actconda="source /opt/anaconda/bin/activate"
+alias yay="paru"
+alias sl="ls"
+alias cd..="cd .."
 
 #[ -f /opt/miniconda3/etc/profile.d/conda.sh ] && source /opt/miniconda3/etc/profile.d/conda.sh
 [ -r /usr/share/bash-completion/bash_completion   ] && . /usr/share/bash-completion/bash_completion
