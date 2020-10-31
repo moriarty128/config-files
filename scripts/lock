@@ -1,14 +1,14 @@
 #!/usr/bin/bash
 #for i3config
-if [[ $brt -ne "-1" ]] || [ -z ${brt+x} ]; then
+if [ -z ${brt+x} ] || [[ $brt -ne "-1" ]]; then
 	brt=$(xbacklight -get)
 	echo $brt
 fi
 
-: ${1?"Pass a lock command. Thank you!"}
+
 
 xbacklight -set 0
-$1
+${1:-i3lock -n -i /home/flash/Pictures/Wallpapers/arch_simple1080.png -u -b}
 xbacklight -set $brt
 
 brt=-1

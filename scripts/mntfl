@@ -3,6 +3,5 @@
 
 folder=${2:-"Media"}
 filesys=${1:-"/dev/sda1"}
-mkdir /run/media/flash
-mkdir /run/media/flash/$folder  
+mkdir -p /run/media/flash/$folder  
 mount $filesys /run/media/flash/$folder
