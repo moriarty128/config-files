@@ -1,0 +1,166 @@
+#! /sbin/python
+from time import sleep
+from glob import glob
+from pathlib import Path
+import os, sys, argparse, subprocess
+
+SYS_CLASS_LEDS=Path("/sys/class/leds/") #path for leds folder
+WARN = '\033[0;31m' # ascii code for red text
+ENDC = '\033[0m' # ascii code for clearing changes
+WARNING = WARN+"-"+ENDC
+
+class Led:
+    def __init__(self,led_folder):
+        #get max_brightness for led
+        with open(led_folder/"max_brightness") as file:
+            self.MAX_BRIGHTNESS=int(file.readline())
+        #simplyingfying the name of the led compared to original name
+        # example: tpacpi::power to just power
+        #the format of file name is devicename:color:function
+        #I'm just retaining the function since in my laptop
+        #there aren't any same functions and none of them have color
+        self.name=os.path.basename(led_folder).split(":")[-1]
+        self.folder=led_folder
+        self.brightness=self.get_brightness()
+   
+    def get_brightness(self):
+        with open(self.folder/"brightness") as file:
+            self.brightness=int(file.readline())
+        return self.brightness
+    
+    def set_brightness(self,brightness):
+        if brightness>self.MAX_BRIGHTNESS:
+            print(f"Brightness cannot be greater than {self.MAX_BRIGHTNESS} for {self.name}")
+            return
+        if brightness<0:
+            print("Brightness cannot be less than 0")
+            return
+        try:
+            with open(self.folder/"brightness","w") as file:
+                print(f"Setting brightness of {self.name} LED to {brightness}")
+                file.write(str(brightness))
+        except PermissionError:
+            #if the permission aren't suitable and the user isn't root
+            #i.e uid of user isn't 0, then run the program with sudo
+            #and/or exit from current program
+            if os.getuid()!=0:
+                print(WARNING+" Can't set LED brightness.")
+                print(WARNING+" Trying again with root permissions.")
+                command = ["sudo"]+[sys.executable] + sys.argv
+                try:
+                    subprocess.call(command)
+                    sys.exit()
+                except:
+                    sys.exit()
+
+        self.get_brightness()
+    #save brightness before updating
+    #this only used when turning all leds off/on 
+    #this is required for reverting to previous state
+    #after turning all the leds off/on 
+    def save_current_brightness(self):
+        self.brightness_before_switch=self.get_brightness()
+    
+    def off(self):
+        self.set_brightness(0)
+    
+    def on(self):
+        self.set_brightness(self.MAX_BRIGHTNESS)
+    #function to revert the led brightness to what it was 
+    #before chaning, this is only used for all leds case
+    def revert(self):
+        if self.brightness==self.get_brightness():
+            self.set_brightness(self.brightness_before_switch)
+            self.brightness_before_switch=None
+        else:
+            print(f"{self.name} led state has changed, I won't revert it to prior state.")
+
+#function to get all the led from /sys/class/leds
+#and then creating a Led object and returing a list of it
+def get_leds():
+    led_folders=SYS_CLASS_LEDS.glob("*")
+    leds=[] 
+    leds_i_wanna_control=["mute","power","micmute","capslock"]
+    for led_folder in led_folders:
+        led=Led(led_folder)
+        if led.name in leds_i_wanna_control:
+            leds.append(led)
+    return leds
+
+def argparser():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("command",help="on/off/list/set",nargs=1)
+    parser.add_argument("led",help="led_name from list",nargs="?",default=None)
+    parser.add_argument("state",help="on or off or brightness",nargs="?",default=None)
+    args=parser.parse_args()
+    return args
+
+def main():
+    args=argparser()
+    #command.lower cuz it decreases the conditions later
+    command=args.command[0].lower()
+    led=args.led
+    state=args.state
+    leds=get_leds()
+    #not raising errors and just printing cuz I don't need stack trace
+    #of my stupidity
+    #Also if else structure simplified:
+    #  if command==list: 
+    #    do list things
+    #  elif command==set: 
+    #    check if led and state is mentioned
+    #    check if led name exists in folders
+    #    do set state/brightness of specified led
+    #  elif command==on or command==off: 
+    #    turn all leds on or off
+    #  else: "enter a valid command"
+    if command=="list":
+        print(f"Led_name = Brightness")
+        for led in leds:
+            print(f"{led.name} = {led.brightness}")
+        return
+    elif command=="set":
+        if led is None:
+            print("Enter LED name")
+            return
+        if state is None:
+            print(f"Enter a state or brightness")
+            return
+        for l in leds:
+            if l.name==led:
+                led=l
+        if type(led) is str:
+            print(f"Enter a valid LED name")
+            return
+        if state=="on": 
+            led.on()
+        elif state=="off":
+            led.off()
+        else:
+            try:
+                state=int(state)
+            except:
+                print("Enter a valid state or brightness.")
+                return
+            led.set_brightness(state)
+        return
+    elif command=="on" or command=="off":
+        for led in leds:
+            led.save_current_brightness()
+            if command=="on":
+                led.on()
+            else:
+                led.off()
+        try:
+            input("Press Enter to revert.")
+        except:
+            pass
+        for led in leds:
+            led.revert()
+    else:
+        print("Use a valid command.")
+        return
+    
+
+if __name__ == '__main__':
+    main()
