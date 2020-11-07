@@ -129,13 +129,25 @@ def main():
         for l in leds:
             if l.name==led:
                 led=l
-        if type(led) is str:
+        if type(led) is str and led.lower()!="think":
             print(f"Enter a valid LED name")
             return
         if state=="on": 
-            led.on()
+            if type(led) is Led:
+                led.on()
+            else:
+                led = open("/sys/kernel/debug/ec/ec0/io", "wb")
+                led.seek(12)
+                led.write(b"\x8a")
+                led.flush()
         elif state=="off":
-            led.off()
+            if type(led) is Led:
+                led.off()
+            else:
+                led = open("/sys/kernel/debug/ec/ec0/io", "wb")
+                led.seek(12)
+                led.write(b"\x0a")
+                led.flush()
         else:
             try:
                 state=int(state)

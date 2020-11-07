@@ -16,12 +16,13 @@ ENDB = '\033[0m' # ascii code for clearing changes
 
 def main():
     scripts = {HOME/'.bin': glob(str(HOME/'.bin/*'))}
-    dotfiles = {HOME: ['.bashrc'],
+    dotfiles = {HOME: ['.bashrc','.bash_profile','.xinitrc'],
                 HOME/'.config/i3': ['config'],
                 HOME/'.config/py3status': ['config'],
                 ETC: ['pacman.conf'],
                 ETC/'pacman.d/': ['mirrorlist'],
-                ETC/'pacman.d/hooks/':['100-systemd-boot.hook']
+                ETC/'pacman.d/hooks/':['100-systemd-boot.hook'],
+                ETC/'systemd/system/getty@tty1.service.d/':['override.conf']
 
     }
     #get the list of changes in dotfile and copy_scripts
