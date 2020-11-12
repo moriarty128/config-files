@@ -5,7 +5,7 @@ find /sys/devices/platform -type f -name "temp*_input"|sed 's/^/hwmon /g' > /etc
 
 echo "" >> /etc/thinkfan.conf
 echo "(0,     0,      60)" >> /etc/thinkfan.conf
-echo "(2,     55,     65)" >> /etc/thinkfan.conf
+echo "(2,     50,     65)" >> /etc/thinkfan.conf
 echo "(4,     57,     70)" >> /etc/thinkfan.conf
 echo "(5,     58,     75)" >> /etc/thinkfan.conf
 echo "(7,     65,     32767)" >> /etc/thinkfan.conf

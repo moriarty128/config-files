@@ -9,7 +9,7 @@ import filecmp
 HOME = Path.home()
 ETC = Path('/etc/')
 CURRENT_DIR = getcwd()
-GIT_REPO = HOME/'Programming/dotfiles-and-scripts/'
+GIT_REPO = HOME/'Programming/Others/dotfiles-and-scripts/'
 BOLD = '\033[1m' # ascii code for bold text
 ENDB = '\033[0m' # ascii code for clearing changes
 

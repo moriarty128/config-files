@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 #for monitoring temp and fan speed
 while true; do 
-	cat /sys/devices/platform/thinkpad_hwmon/hwmon/hwmon4/*1_input; 
+	cat /sys/devices/platform/thinkpad_hwmon/hwmon/hwmon*/*1_input; 
 	sleep 1; 
 	echo -ne "\033[A\033[A"; 
 done

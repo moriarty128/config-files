@@ -8,6 +8,7 @@
 # it. Feel free to add support to more languages.
 from os import system, get_terminal_size,remove
 import argparse
+from time import time
 
 #languages that have a output file
 #output files get deleted after running.
@@ -71,14 +72,19 @@ def run(args,files):
         command=file["command"]
         if args.verbosity>0 or len(files)>1: #verbosity
             print("running "+command+"\n")
+        
+        start = time() #start time
         system(file["command"])
+        end = time() #end time
+        
+        print(f"[Finsihed in {round(end-start,2)}s]") #print time taken to run
+        
         #for compiled files, output is deleted here.
         output=file["output"]
         if output:
             if args.verbosity>2:
                 print("\nremoving "+output+"\n")
             remove(output)
-        print()
 
 def main():
     args=argsparser()
