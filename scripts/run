@@ -77,7 +77,7 @@ def run(args,files):
         system(file["command"])
         end = time() #end time
         
-        print(f"[Finsihed in {round(end-start,2)}s]") #print time taken to run
+        print(f"\n[Finsihed in {round(end-start,2)}s]") #print time taken to run
         
         #for compiled files, output is deleted here.
         output=file["output"]

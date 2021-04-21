@@ -17,7 +17,7 @@ ENDB = '\033[0m' # ascii code for clearing changes
 def main():
     scripts = {HOME/'.bin': glob(str(HOME/'.bin/*'))}
     dotfiles = {HOME: ['.bashrc','.bash_profile','.xinitrc'],
-                HOME/'.config/i3': ['config'],
+                HOME/'.config/sway': ['config'],
                 HOME/'.config/py3status': ['config'],
                 ETC: ['pacman.conf'],
                 ETC/'pacman.d/': ['mirrorlist'],

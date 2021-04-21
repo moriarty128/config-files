@@ -24,15 +24,15 @@ multipliers={
 }
 
 #change this string to whatever you want to transmit using morse code, make sure you don't use characters from outside of above dict.
-inputstring="Say Hi if you decode this"
+inputstring="delete"
 
 #unit_time is the amount of time in seconds for dot and intrachar_gap
-unit_time=0.05
+unit_time=0.3
 
 #change the letter a to 0 for transmitting through power button
 ledon =b"\x8a"
 ledoff=b"\x0a"
-
+ledstate=''
 def encryptor(a):
     b=''
     for letter in a:
@@ -42,6 +42,7 @@ def encryptor(a):
 
 def morse_led(string):
     for code in string:
+        print(code,end='|', flush=True)
         if(code=='.'):
             led(True)
             sleep(unit_time*multipliers['dot'])
@@ -59,26 +60,32 @@ def morse_led(string):
             led(False)
             sleep(unit_time*multipliers['medium_gap'])
 
+
 def led(state):
+    global ledstate
+    global led_file
     if state:
-        led = open("/sys/kernel/debug/ec/ec0/io", "wb")
-        led.seek(12)
-        led.write(ledon)
-        led.flush()
+        if state!=ledstate:
+            led_file.seek(12)
+            led_file.write(ledon)
+            ledstate = True
     else:
-        led = open("/sys/kernel/debug/ec/ec0/io", "wb")
-        led.seek(12)
-        led.write(ledoff)
-        led.flush()
+        if state!=ledstate:
+            led_file.seek(12)
+            led_file.write(ledoff)
+            ledstate = False
+    led_file.flush()
 
 def morse_loop(string):
     while True:
+        print("\r",end="                                            \r") 
         sleep(1)
         morse_led(string)
 
 morsestring=encryptor(inputstring.lower())
 
 if __name__ == '__main__':
+    led_file = open("/sys/kernel/debug/ec/ec0/io", "wb", 0)
     try:
         morse_loop(morsestring)
     except KeyboardInterrupt:
@@ -86,5 +93,7 @@ if __name__ == '__main__':
             led(False)
         else:
             led(True)
+    finally:
+        led_file.close()
 
 

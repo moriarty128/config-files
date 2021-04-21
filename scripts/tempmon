@@ -1,7 +1,9 @@
 #!/usr/bin/bash
 #for monitoring temp and fan speed
 while true; do 
-	cat /sys/devices/platform/thinkpad_hwmon/hwmon/hwmon*/*1_input; 
+	echo -e "Fan RPM\t\t: $(cat /sys/devices/platform/thinkpad_hwmon/hwmon/hwmon*/fan1_input)";
+	echo -e "Temp C\t\t: $(($(cat /sys/devices/platform/thinkpad_hwmon/hwmon/hwmon*/temp1_input)/1000))";
+	cat /proc/cpuinfo | grep "MHz"	
 	sleep 1; 
-	echo -ne "\033[A\033[A"; 
-done
+	echo -ne "\033[A\033[A\033[A\033[A\033[A\033[A\033[A\033[A\033[A\033[A";
+done; 
