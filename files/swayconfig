@@ -369,7 +369,7 @@ output "*" background /home/flash/Pictures/Wallpapers/arch_simple2.png fill
 exec nm-applet
 
 #lock
-bindsym Mod4+Mod1+l exec ~/.bin/lock "i3lock -n -i /home/flash/Pictures/Wallpapers/arch_simple1080.png -u -b -c 000000" &
+bindsym Mod4+Mod1+l exec ~/.bin/lock "swaylock -n -i /home/flash/Pictures/Wallpapers/arch_simple1080.png -u -b -c 000000" &
 
 # Touchpad stuff
 input 2:7:SynPS/2_Synaptics_TouchPad {
