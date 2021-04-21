@@ -18,6 +18,8 @@ def main():
     scripts = {HOME/'.bin': glob(str(HOME/'.bin/*'))}
     dotfiles = {HOME: ['.bashrc','.bash_profile','.xinitrc'],
                 HOME/'.config/sway': ['config'],
+                HOME/'.config/waybar': ['config'],
+                HOME/'.config/dunst': ['dunstrc'],
                 HOME/'.config/py3status': ['config'],
                 ETC: ['pacman.conf'],
                 ETC/'pacman.d/': ['mirrorlist'],
