@@ -28,6 +28,8 @@ group network {
     wireless _first_ {
         format_up = "W: %essid"
         format_down = "W: DOWN"
+	on_click 1 = "exec pidof nm-applet || dbus-launch nm-applet"
+	on_click 3 = "exec killall nm-applet"
     }
 
     ethernet _first_ {
