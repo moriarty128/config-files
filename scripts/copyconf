@@ -18,6 +18,7 @@ def main():
     scripts = {HOME/'.bin': glob(str(HOME/'.bin/*'))}
     dotfiles = {HOME: ['.bashrc','.bash_profile','.xinitrc'],
                 HOME/'.config/sway': ['config'],
+                HOME/'.config/i3': ['config'],
                 HOME/'.config/waybar': ['config','style.css'],
                 HOME/'.config/dunst': ['dunstrc'],
                 HOME/'.config/py3status': ['config'],

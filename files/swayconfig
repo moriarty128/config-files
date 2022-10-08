@@ -411,3 +411,5 @@ output HDMI-A-1 resolution 1920x1080 position 1921,0
 exec --no-startup-id dunst
 # start nm-applet
 exec nm-applet --indicator
+# polkit
+exec /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1

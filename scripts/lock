@@ -5,8 +5,10 @@ if [ -z ${brt+x} ] || [[ $brt -ne "-1" ]]; then
 	echo $brt
 fi
 
+killall picom
 xbacklight -set 0
 ${1:-i3lock -n -i /home/flash/Pictures/Wallpapers/arch_simple1080.png -u -b -c 000000}
 xbacklight -set $brt
+picom &
 
 brt=-1

@@ -22,11 +22,16 @@ export HISTSIZE=300
 export HISTFILESIZE=300000
 export EDITOR="vim"
 export ANDROID_SDK_ROOT="${HOME}/.Android/Sdk"
-export QT_QPA_PLATFORMTHEME=gtk2
-
+export QT_QPA_PLATFORMTHEME='gtk2'
+export XDG_CURRENT_DESKTOP='sway'
+export MOZ_ENABLE_WAYLAND=1 
+export LIBVA_DRIVER_NAME='radeonsi'
+export VDPAU_DRIVER='radeonsi'
+export CLASSPATH='/usr/share/tomcat10/lib/*'	
 # alias
 alias ls="ls --color -h"
-alias vi="vim"
+alias vi="nvim"
+alias vim="nvim"
 alias shred="shred -zf"
 alias wget="wget -U 'noleak'"
 alias curl="curl --user-agent 'noleak'"
@@ -36,7 +41,8 @@ alias clcd="clear && cd"
 alias cl="clear"
 
 alias cd..="cd .."
-alias cdtw="cd ~/Programming/Mainline/College/6"
+alias cdtw="cd ~/Programming/Mainline/College/8"
+alias cdgt="cd ~/Programming/Mainline/College/be_project/"
 alias cdfl="cd ~/Programming/Mainline/Internship/int_psl/kvasir-ibmfl"
 alias actfl="actconda && conda deactivate && conda activate ibm-fl"
 alias cdsl="cd ~/Programming/Sideline"
@@ -46,16 +52,22 @@ alias cdan="cd ~/Programming/Mainline/Android"
 
 alias xrandrhdmi="xrandr --output HDMI-1 --mode 1920x1080"
 alias r="R"
-alias mpv="mpv --vo=gpu --hwdec=vaapi"
 alias open="xdg-open"
 alias yay="paru"
 alias sl="ls"
 alias scmar="systemctl start mariadb"
+alias sctom="systemctl start tomcat10"
+alias schttp="systemctl start httpd"
 alias maria="mariadb -u root -p"
 alias gvenv="source ~/.venv/bin/activate"
 alias svenv="source ./.venv/bin/activate"
 alias deemix-web="source ~/Music/.venv/bin/activate && python ~/Music/deemix-pyweb/deemix-pyweb.py"
 alias outage="python ~/Programming/Sideline/Android/Outages/script/outage.py" 
+alias stream="/usr/lib/xdg-desktop-portal -r & /usr/lib/xdg-desktop-portal-wlr &"
+alias xb3="bluetoothctl power on && bluetoothctl connect 74:45:CE:1E:03:D1"
+alias xb="bluetoothctl power on && bluetoothctl connect 14:3F:A6:A7:27:D5"
+alias bp="bluetoothctl power off"
+alias bd="bluetoothctl disconnect"
 [ -r /usr/share/bash-completion/bash_completion   ] && . /usr/share/bash-completion/bash_completion
 
 # >>> conda initialize >>>
